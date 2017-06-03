@@ -15,6 +15,18 @@ def construct_test_image():
     return test_image
 
 
+def construct_redundant_image():
+    test_image = Image.new("1", (16, 30))
+    test_image.putpixel((0, 0), 1)
+    test_image.putpixel((8, 0), 1)
+    test_image.putpixel((1, 10), 1)
+    test_image.putpixel((9, 10), 1)
+    test_image.putpixel((3, 21), 1)
+    test_image.putpixel((11, 21), 1)
+
+    return test_image
+
+
 class TestBlockImage(unittest.TestCase):
     def test_block_image_asks_for_input_image(self):
         input_image = Image.new("1", (16, 30))
@@ -42,6 +54,22 @@ class TestBlockImage(unittest.TestCase):
                         self.assertEqual(pixel, 1, "Coordinates %i (%i, %i)" % (block_index, x, y))
                     else:
                         self.assertEqual(pixel, 0, "Coordinates %i (%i, %i)" % (block_index, x, y))
+
+    def test_reduce_blocks_removes_duplicates(self):
+        input_image = construct_redundant_image()
+        im = BlockImage(input_image)
+
+        self.assertEqual(im.block_count, 6)
+        self.assertEqual(im.get_unique_block_count(), 6)
+
+        im.deduplicate_blocks()
+
+        self.assertEqual(im.blocks[0], im.blocks[1])
+        self.assertNotEqual(im.blocks[1], im.blocks[2])
+        self.assertEqual(im.blocks[2], im.blocks[3])
+        self.assertNotEqual(im.blocks[3], im.blocks[4])
+        self.assertEqual(im.blocks[4], im.blocks[5])
+        self.assertEqual(im.get_unique_block_count(), 3)
 
 
 class TestBoxGenerator(unittest.TestCase):

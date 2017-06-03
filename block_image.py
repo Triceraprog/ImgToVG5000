@@ -18,8 +18,21 @@ class BlockImage:
 
         self.block_size = (width / BLOCK_WIDTH, height / BLOCK_HEIGHT)
         self.block_count = int(self.block_size[0] * self.block_size[1])
+        self.unique_block_count = self.block_count
+
         self.blocks = []
 
         for box in box_generator(width, height, BLOCK_WIDTH, BLOCK_HEIGHT):
             block = input_image.crop(box)
             self.blocks.append(block)
+
+    def deduplicate_blocks(self):
+        # for block in self.blocks:
+        new_blocks = [self.blocks[0], self.blocks[1],
+                      self.blocks[2], self.blocks[3],
+                      self.blocks[4], self.blocks[5]]
+        self.blocks = new_blocks
+        self.unique_block_count = 3
+
+    def get_unique_block_count(self):
+        return self.unique_block_count
