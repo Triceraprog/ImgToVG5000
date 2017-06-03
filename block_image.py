@@ -62,16 +62,10 @@ class BlockImage:
         output_image.save(filename)
 
     def get_image(self):
-        output_image = Image.new("1", self.size)
+        bl = BlockList(self.blocks)
+        im = bl.get_image(self.size[0])
 
-        width, height = self.size
-        paste_list = zip(box_generator(width, height, BLOCK_WIDTH, BLOCK_HEIGHT),
-                         self.blocks)
-
-        for box, block in paste_list:
-            output_image.paste(block, box)
-
-        return output_image
+        return im
 
     def get_block_palette(self):
         block_set = UniqueBlockSet()
