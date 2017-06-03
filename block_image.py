@@ -63,17 +63,14 @@ class BlockImage:
             self.blocks.append(block)
 
     def deduplicate_blocks(self):
-        # unique_blocks = set()
-        # new_blocks = []
-        # for block in self.blocks:
-        #     if block not in unique_blocks:
-        #         new_blocks.append(block)
-        #     unique_blocks += block
-        new_blocks = [self.blocks[0], self.blocks[1],
-                      self.blocks[2], self.blocks[3],
-                      self.blocks[4], self.blocks[5]]
+        block_set = UniqueBlockSet()
+        for block in self.blocks:
+            block_set.add(block)
+
+        new_blocks = [block_set.get(block) for block in self.blocks]
+
         self.blocks = new_blocks
-        self.unique_block_count = 3
+        self.unique_block_count = len(block_set)
 
     def get_unique_block_count(self):
         return self.unique_block_count
