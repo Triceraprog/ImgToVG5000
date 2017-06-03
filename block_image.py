@@ -1,5 +1,3 @@
-from PIL import Image
-
 from block_list import BlockList
 from tools import box_generator, are_images_equal, BLOCK_WIDTH, BLOCK_HEIGHT
 
