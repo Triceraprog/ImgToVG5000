@@ -30,11 +30,18 @@ def main(options):
         logger.debug("Output of de-duplicated image")
         block_image.save("de-duplicated.png")
 
+    if options.output_block_palette:
+        logger.debug("Output of the block palette")
+        block_palette = block_image.get_block_palette()
+        im = block_palette.get_image()
+        im.save("block_palette.png")
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Convert a picture file to a VG5000µ picture.")
     parser.add_argument('--output-dithered', action="store_true", dest="output_dithered")
     parser.add_argument('--output-deduplicated', action="store_true", dest="output_deduplicated")
+    parser.add_argument('--output-block-palette', action="store_true", dest="output_block_palette")
     parser.add_argument('file', type=str, help="Filename of the input picture file")
 
     args = parser.parse_args()

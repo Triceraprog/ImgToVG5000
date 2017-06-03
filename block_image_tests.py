@@ -132,3 +132,77 @@ class TestUniqueBlockSet(unittest.TestCase):
         new_block3 = block_set.get(block3)
         self.assertEqual(new_block1, new_block2)
         self.assertNotEqual(new_block2, new_block3)
+
+
+class ParameterException(Exception):
+    pass
+
+
+class BlockList():
+    def __init__(self, block_list):
+        sizes = {block.size for block in block_list}
+        if len(sizes) != 1:
+            raise ParameterException("All blocks must have the same size")
+
+        self.block_list = block_list
+
+    def __len__(self):
+        return len(self.block_list)
+
+    def __get_block_geometry(self, max_width):
+        width, height = self.block_list[0].size
+
+        block_count = len(self.block_list)
+        count_by_line = int(max_width / width)
+
+        if count_by_line == 0:
+            raise ParameterException("Maximum width is too small")
+
+        entire_line_count = int(block_count / count_by_line)
+        last_line_count = block_count - (entire_line_count * count_by_line)
+
+        line_count = entire_line_count if last_line_count == 0 else entire_line_count + 1
+
+        return count_by_line, line_count
+
+    def get_image(self, max_width):
+        width, height = self.block_list[0].size
+
+        columns, lines = self.__get_block_geometry(max_width)
+        image_width = columns * width
+        image_height = lines * height
+
+        return Image.new("1", (image_width, image_height))
+
+
+class TestBlockListToImage(unittest.TestCase):
+    def test_block_list_gets_an_image_list(self):
+        block1 = Image.new("1", (BLOCK_WIDTH, BLOCK_HEIGHT))
+        block2 = Image.new("1", (BLOCK_WIDTH, BLOCK_HEIGHT))
+        block2.putpixel((0, 0), 1)
+
+        bl = BlockList([block1, block2])
+        self.assertEqual(len(bl), 2)
+
+    def test_every_image_must_be_the_same_size(self):
+        block1 = Image.new("1", (BLOCK_WIDTH, BLOCK_HEIGHT))
+        block2 = Image.new("1", (BLOCK_WIDTH, BLOCK_HEIGHT + 1))
+
+        with self.assertRaises(ParameterException):
+            BlockList([block1, block2])
+
+    def test_maximum_size_must_be_big_enough(self):
+        block = Image.new("1", (BLOCK_WIDTH, BLOCK_HEIGHT))
+
+        bl = BlockList([block])
+        with self.assertRaises(ParameterException):
+            bl.get_image(BLOCK_WIDTH - 1)
+
+    def test_block_list_can_give_an_image_horizontal(self):
+        block1 = Image.new("1", (BLOCK_WIDTH, BLOCK_HEIGHT))
+        block2 = Image.new("1", (BLOCK_WIDTH, BLOCK_HEIGHT))
+        block2.putpixel((0, 0), 1)
+
+        bl = BlockList([block1, block2])
+        im = bl.get_image(BLOCK_WIDTH * 2)
+        self.assertEqual(im.size, (BLOCK_WIDTH * 2, BLOCK_HEIGHT))

@@ -91,3 +91,7 @@ class BlockImage:
             output_image.paste(block, box)
 
         return output_image
+
+    def get_block_palette(self):
+        return {block for block in self.blocks}
+
