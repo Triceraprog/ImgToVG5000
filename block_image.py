@@ -1,3 +1,4 @@
+from PIL import Image
 from PIL import ImageChops
 
 BLOCK_WIDTH = 8
@@ -74,3 +75,19 @@ class BlockImage:
 
     def get_unique_block_count(self):
         return self.unique_block_count
+
+    def save(self, filename):
+        output_image = self.get_image()
+        output_image.save(filename)
+
+    def get_image(self):
+        output_image = Image.new("1", self.size)
+
+        width, height = self.size
+        paste_list = zip(box_generator(width, height, BLOCK_WIDTH, BLOCK_HEIGHT),
+                         self.blocks)
+
+        for box, block in paste_list:
+            output_image.paste(block, box)
+
+        return output_image

@@ -73,6 +73,15 @@ class TestBlockImage(unittest.TestCase):
         self.assertEqual(im.blocks[4], im.blocks[5])
         self.assertEqual(im.get_unique_block_count(), 3)
 
+    def test_deduplicated_images_is_unaltered(self):
+        input_image = construct_redundant_image()
+        im = BlockImage(input_image)
+        im.deduplicate_blocks()
+
+        new_image = im.get_image()
+
+        are_images_equal(input_image, new_image)
+
 
 class TestBoxGenerator(unittest.TestCase):
     def test_box_generator(self):
