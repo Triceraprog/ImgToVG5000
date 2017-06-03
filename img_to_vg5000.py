@@ -33,7 +33,7 @@ def main(options):
     if options.output_block_palette:
         logger.debug("Output of the block palette")
         block_palette = block_image.get_block_palette()
-        im = block_palette.get_image()
+        im = block_palette.get_image(320)
         im.save("block_palette.png")
 
 
