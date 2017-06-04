@@ -1,31 +1,9 @@
 import unittest
 
 from PIL import Image
+
+from image_to_text import ImageToText
 from tools import BLOCK_WIDTH, BLOCK_HEIGHT, ParameterException
-
-
-class ImageToText:
-    def __init__(self, block):
-        if block.size != (BLOCK_WIDTH, BLOCK_HEIGHT):
-            raise ParameterException()
-
-        if block.mode != "1":
-            raise ParameterException()
-
-        encoded = ""
-        for y in range(BLOCK_HEIGHT):
-            acc = 0
-            for x in range(BLOCK_WIDTH):
-                p = block.getpixel((x, y))
-                if p:
-                    acc += 2 ** (7 - x)
-
-            encoded += "%02.X" % acc
-
-        self.representation = encoded
-
-    def __str__(self):
-        return self.representation
 
 
 class TestImageToText(unittest.TestCase):
