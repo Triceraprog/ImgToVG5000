@@ -14,6 +14,10 @@ class BlockList:
     def __len__(self):
         return len(self.block_list)
 
+    def __iter__(self):
+        for block in self.block_list:
+            yield block
+
     def __get_block_geometry(self, max_width):
         block_width, _ = self.block_list[0].size
 
