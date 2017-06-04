@@ -1,29 +1,6 @@
 from block_list import BlockList
-from tools import box_generator, are_images_equal, BLOCK_WIDTH, BLOCK_HEIGHT
-
-
-class UniqueBlockSet:
-    def __init__(self):
-        self.blocks = []
-
-    def add(self, block):
-        if block not in self:
-            self.blocks.append(block)
-
-    def get(self, asked_block):
-        for block in self.blocks:
-            if are_images_equal(block, asked_block):
-                return block
-        return None
-
-    def __len__(self):
-        return len(self.blocks)
-
-    def __contains__(self, asked_block):
-        for block in self.blocks:
-            if are_images_equal(block, asked_block):
-                return True
-        return False
+from tools import box_generator, BLOCK_WIDTH, BLOCK_HEIGHT
+from unique_block_set import UniqueBlockSet
 
 
 class BlockImage:
