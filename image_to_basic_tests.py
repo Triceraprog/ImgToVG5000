@@ -55,3 +55,38 @@ class TestImageToBasic(unittest.TestCase):
 
         self.assertTrue(found_x_cursor_shift, "cursor shift for X not found")
         self.assertTrue(found_y_cursor_shift, "cursor shift for Y not found")
+
+    def test_basic_outputs_encoded_blocks(self):
+        im = BlockImage(construct_redundant_image())
+        basic = ImageToBasic(im)
+
+        character_count = 0
+        found_char_1 = False
+        found_char_2 = False
+        found_char_3 = False
+
+        for line in basic:
+            if "SETEG " in line:
+                character_count += 1
+            if "80000000000000000000" in line:
+                found_char_1 = True
+            if "40000000000000000000" in line:
+                found_char_2 = True
+            if "00100000000000000000" in line:
+                found_char_3 = True
+
+        self.assertEqual(3, character_count)
+        self.assertTrue(found_char_1, "Did not found Encoded Character 1")
+        self.assertTrue(found_char_2, "Did not found Encoded Character 2")
+        self.assertTrue(found_char_3, "Did not found Encoded Character 3")
+
+    def test_basic_outputs_index_data(self):
+        im = BlockImage(construct_redundant_image())
+        basic = ImageToBasic(im)
+
+        found_data = False
+        for line in basic:
+            if "DATA 32,32,33,33,34,34" in line:
+                found_data = True
+
+        self.assertTrue(found_data, "DATA section was not found")

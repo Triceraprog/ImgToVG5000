@@ -3,6 +3,7 @@ import logging
 from PIL import Image
 
 from block_image import BlockImage
+from image_to_basic import ImageToBasic
 
 
 def main(options):
@@ -26,6 +27,9 @@ def main(options):
     block_image = BlockImage(dithered_image)
     block_image.deduplicate_blocks()
 
+    if len(block_image.get_block_palette()) > 96:
+        logger.error("Picture generates more than 96 blocks. BASIC output will be truncated.")
+
     if options.output_deduplicated:
         logger.debug("Output of de-duplicated image")
         block_image.save("de-duplicated.png")
@@ -39,7 +43,9 @@ def main(options):
     if options.output_basic:
         logger.debug("Output of the BASIC listing")
         basic = ImageToBasic(block_image)
-        basic.save("image.bas")
+        with open("image.bas", "w") as f:
+            content = "\n".join(basic)
+            f.write(content)
 
 
 if __name__ == '__main__':
