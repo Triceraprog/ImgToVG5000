@@ -25,3 +25,8 @@ BLOCK_HEIGHT = 10
 
 class ParameterException(Exception):
     pass
+
+
+def chunks(sequence, chunk_size):
+    for index in range(0, len(sequence), chunk_size):
+        yield sequence[index:index + chunk_size]
