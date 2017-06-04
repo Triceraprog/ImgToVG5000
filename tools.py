@@ -30,3 +30,10 @@ class ParameterException(Exception):
 def chunks(sequence, chunk_size):
     for index in range(0, len(sequence), chunk_size):
         yield sequence[index:index + chunk_size]
+
+
+def fix_size_to_block_multiple(size):
+    new_width = BLOCK_WIDTH * int((size[0] + BLOCK_WIDTH - 1) / BLOCK_WIDTH)
+    new_height = BLOCK_HEIGHT * int((size[1] + BLOCK_HEIGHT - 1) / BLOCK_HEIGHT)
+    new_size = new_width, new_height
+    return new_size

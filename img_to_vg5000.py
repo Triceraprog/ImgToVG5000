@@ -1,9 +1,11 @@
 import argparse
 import logging
+
 from PIL import Image
 
 from block_image import BlockImage
 from image_to_basic import ImageToBasic
+from tools import fix_size_to_block_multiple
 
 
 def main(options):
@@ -19,6 +21,23 @@ def main(options):
     logger.debug("Input image has size: %s" % str(input_image.size))
 
     dithered_image = input_image.convert(mode="1", dither=Image.FLOYDSTEINBERG)
+
+    if options.auto_crop:
+        bbox = dithered_image.getbbox()
+        if bbox is not None:
+            dithered_image = dithered_image.crop(bbox)
+            size = dithered_image.size
+            logger.debug("Cropped image has size: %s" % str(size))
+
+            new_size = fix_size_to_block_multiple(size)
+            if new_size != size:
+                logger.info("Resizing picture to: %s" % str(new_size))
+                new_image = Image.new("1", new_size)
+                new_image.paste(dithered_image, box=(0, 0, dithered_image.size[0], dithered_image.size[1]))
+                dithered_image = new_image
+
+        else:
+            logger.error("Cannot crop a blank image")
 
     if options.output_dithered:
         logger.debug("Output of dithered image")
@@ -54,6 +73,7 @@ if __name__ == '__main__':
     parser.add_argument('--output-deduplicated', action="store_true", dest="output_deduplicated")
     parser.add_argument('--output-block-palette', action="store_true", dest="output_block_palette")
     parser.add_argument('--output-basic', action="store_true", dest="output_basic")
+    parser.add_argument('--auto-crop', action="store_true", dest="auto_crop")
     parser.add_argument('file', type=str, help="Filename of the input picture file")
 
     args = parser.parse_args()
