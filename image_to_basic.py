@@ -87,7 +87,7 @@ class ImageToBasic:
 
 
 PROLOGUE_TEMPLATE = """
-{line} INIT 6:EG0,6
+{line} INIT 0,0:EG6,0
 {line} FOR Y=0 TO {for_y}
 {line} FOR X=0 TO {for_x}
 {line} READ I
