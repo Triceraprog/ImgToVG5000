@@ -2,7 +2,7 @@ import unittest
 
 from PIL import Image
 
-from tools import BLOCK_WIDTH, BLOCK_HEIGHT
+from tools import BLOCK_WIDTH, BLOCK_HEIGHT, ParameterException
 from block_list import BlockList, ParameterException
 
 

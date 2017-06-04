@@ -1,10 +1,6 @@
 from PIL import Image
 
-from tools import box_generator, BLOCK_WIDTH, BLOCK_HEIGHT
-
-
-class ParameterException(Exception):
-    pass
+from tools import box_generator, BLOCK_WIDTH, BLOCK_HEIGHT, ParameterException
 
 
 class BlockList:

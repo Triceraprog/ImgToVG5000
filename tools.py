@@ -21,3 +21,7 @@ def are_images_equal(first_image, second_image):
 
 BLOCK_WIDTH = 8
 BLOCK_HEIGHT = 10
+
+
+class ParameterException(Exception):
+    pass
